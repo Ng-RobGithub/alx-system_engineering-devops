@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-# Disable SC2009 warning for grep command
 # shellcheck disable=SC2009
 # Use ps to list all processes and grep for "bash"
 ps aux | grep bash
