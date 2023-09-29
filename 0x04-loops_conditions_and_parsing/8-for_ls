@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# This script lists files in the current directory with names after the first dash.
+
+for file in *; do
+# Check if the file is not hidden and contains a dash in the name.
+if [[ ! "$file" == .* && "$file" == *-* ]]; then
+# Use cut to extract the part after the first dash.
+new_name=$(echo "$file" | cut -d '-' -f 2-)
+echo "$new_name"
+fi
+done

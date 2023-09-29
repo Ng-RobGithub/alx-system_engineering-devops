@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# This script displays different messages based on the loop iteration.
+
+count=1  # Initialize the loop counter
+
+while [ "$count" -le 10 ]; do
+if [ "$count" -eq 4 ]; then
+echo "bad luck"  # Display "bad luck" for the 4th iteration
+elif [ "$count" -eq 8 ]; then
+echo "good luck"  # Display "good luck" for the 8th iteration
+else
+echo "Best School"  # Display "Best School" for other iterations
+fi
+
+count=$((count + 1))  # Increment the loop counter
+done
