@@ -1,16 +1,9 @@
 #!/usr/bin/env bash
+# Get the list of process IDs (PIDs) for processes containing "bash" in their name
+pids=$(pgrep -f bash)
 
-# Iterate through all process directories in /proc
-for pid_dir in /proc/[0-9]*; do
-pid=$(basename "$pid_dir")
-
-# Check if cmdline file exists (contains process name)
-if [ -f "$pid_dir/cmdline" ]; then
-process_name=$(cat "$pid_dir/cmdline" | tr '\0' ' ')
-
-# Check if process name contains "bash"
-if [[ "$process_name" == *bash* ]]; then
-echo "PID: $pid, Process Name: $process_name"
-fi
-fi
+# Iterate through the PIDs and display their corresponding process names
+for pid in $pids; do
+	process_name=$(ps -p "$pid" -o comm=)
+	echo "PID: $pid, Process Name: $process_name"
 done
