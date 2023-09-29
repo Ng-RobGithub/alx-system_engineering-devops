@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+# Iterate through all process directories in /proc
+for pid_dir in /proc/[0-9]*; do
+pid=$(basename "$pid_dir")
+
+# Check if cmdline file exists (contains process name)
+if [ -f "$pid_dir/cmdline" ]; then
+process_name=$(cat "$pid_dir/cmdline" | tr '\0' ' ')
+
+# Check if process name contains "bash"
+if [[ "$process_name" == *bash* ]]; then
+echo "PID: $pid, Process Name: $process_name"
+fi
+fi
+done
