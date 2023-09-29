@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# Display a header
+echo "PID   PPID   CMD"
+
+# Use the ps command to list all processes with hierarchy and grep for "bash"
+# The third line disables SC2009 warning for grep
+# SC2009 warns about using backticks for command substitution
+# Here, backticks are necessary for the command to work correctly
+# shellcheck disable=SC2009
+ps -e -o pid,ppid,cmd | grep "[b]ash"
