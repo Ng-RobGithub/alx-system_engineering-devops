@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+# Function to clean up and exit gracefully
+terminator() {
+rm -f /var/run/myscript.pid
+exit
+}
+
+# Set up signal traps
+trap 'echo "Y U no love me?!"' SIGINT
+trap 'echo "I hate the kill command" && terminator' SIGTERM
+trap 'terminator' SIGQUIT
+
+# Get the current process ID and save it to the PID file
+echo $$ > /var/run/myscript.pid
+
+# Display message indefinitely with a sleep interval
+while true; do
+echo "To infinity and beyond"
+sleep 2
+done
