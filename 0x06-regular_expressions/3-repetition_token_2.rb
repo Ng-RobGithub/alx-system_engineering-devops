@@ -1,9 +1,9 @@
 #!/usr/bin/env ruby
 
-# Function to match repetitions of 't' token
+# Function to match repetitions of 't' token with at least one 'b' in between
 def repetition_token(str)
 # Use the scan method with the regular expression pattern
-matches = str.scan(/t{2,5}/)
+matches = str.scan(/hbt+n/)
 # Join the matches into a single string and print
 puts matches.join
 end
