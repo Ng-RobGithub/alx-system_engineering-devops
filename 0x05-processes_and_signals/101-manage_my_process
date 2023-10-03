@@ -1,39 +1,46 @@
 #!/usr/bin/env bash
-# Manages the script manage_my_process.
 
-if [ $# -ne 1 ]; then
-	echo "Usage: $0 {start|stop|restart}"
-	exit 1
-fi
-
-if [ "$1" == "start" ]; then
-	if [ -f /var/run/my_process.pid ]; then
-		echo "manage_my_process is already running."
-		exit 1
-	fi
-
+# Function to start the process and create PID file
+start_process() {
 	./manage_my_process &
 	echo "$!" > /var/run/my_process.pid
 	echo "manage_my_process started"
-elif [ "$1" == "stop" ]; then
+}
+
+# Function to stop the process and delete PID file
+stop_process() {
 	if [ -f /var/run/my_process.pid ]; then
 		echo "manage_my_process stopped"
 		kill "$(cat /var/run/my_process.pid)"
 		rm /var/run/my_process.pid
 	else
-		echo "manage_my_process is not running."
-		exit 1
+		echo "manage_my_process is not running"
 	fi
-elif [ "$1" == "restart" ]; then
-	if [ -f /var/run/my_process.pid ]; then
-		echo "manage_my_process restarted"
-		kill "$(cat /var/run/my_process.pid)"
-		rm /var/run/my_process.pid
-	fi
+}
 
-	./manage_my_process &
-	echo "$!" > /var/run/my_process.pid
+# Function to restart the process
+restart_process() {
+	stop_process
+	start_process
+	echo "manage_my_process restarted"
+}
+
+# Check for command-line arguments
+if [ $# -eq 1 ]; then
+	case $1 in
+		"start")
+			start_process
+			;;
+		"stop")
+			stop_process
+			;;
+		"restart")
+			restart_process
+			;;
+		*)
+			echo "Usage: manage_my_process {start|stop|restart}"
+			;;
+	esac
 else
-	echo "Usage: $0 {start|stop|restart}"
-	exit 1
+	echo "Usage: manage_my_process {start|stop|restart}"
 fi
