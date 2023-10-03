@@ -10,7 +10,7 @@ end
 
 # Check if an argument is provided
 if ARGV.length != 1
-puts "Usage: ./3-repetition_token_2.rb <string>"
+puts "Usage: ./4-repetition_token_3.rb <string>"
 exit(1)
 end
 
