@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
-# Configures an Ubuntu server as follows:
-#   - localhost resolves to 127.0.0.2
-#   - facebook.com resolves to 8.8.8.8
+# Configure an Ubuntu server by modifying the hosts file.
+# This script resolves localhost to 127.0.0.2 and facebook.com to 8.8.8.8.
 
 # Define the target hosts file
 target_hosts_file="/etc/hosts"
@@ -13,8 +12,8 @@ temp_hosts_file="$(mktemp)"
 cp "$target_hosts_file" "$temp_hosts_file"
 
 # Append the new host entries to the temporary hosts file
-echo "127.0.0.2		localhost" >> "$temp_hosts_file"
-echo "8.8.8.8		facebook.com" >> "$temp_hosts_file"
+echo "127.0.0.2 localhost" >> "$temp_hosts_file"
+echo "8.8.8.8 facebook.com" >> "$temp_hosts_file"
 
 # Replace the original hosts file with the modified temporary hosts file
 mv "$temp_hosts_file" "$target_hosts_file"
