@@ -1,3 +1,8 @@
 #!/usr/bin/env bash
-# Connect to the server using ssh with specified key and user
-ssh -i ~/.ssh/id_rsa ubuntu@54.208.87.109
+# Server details
+server="54.208.87.109"
+user="ubuntu"
+private_key="~/.ssh/school"
+
+# SSH connection using single-character flags
+ssh -i "$private_key" "$user@$server"
