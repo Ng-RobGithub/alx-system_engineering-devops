@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Server details
-server="54.208.87.109"
-user="ubuntu"
+server=54.167.152.167
+user=ubuntu
 private_key="~/.ssh/school"
 
 # SSH connection using single-character flags
