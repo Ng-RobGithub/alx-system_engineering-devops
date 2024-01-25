@@ -1,60 +1,24 @@
- Puppet manifest for installing and configuring Nginx
+# Setup New Ubuntu server with nginx
 
-# Install Nginx package
+exec { 'update system':
+        command => '/usr/bin/apt-get update',
+}
+
 package { 'nginx':
-  ensure => installed,
+	ensure => 'installed',
+	require => Exec['update system']
 }
 
-# Start Nginx service and enable it to start on boot
-service { 'nginx':
-  ensure  => running,
-  enable  => true,
-  require => Package['nginx'],
+file {'/var/www/html/index.html':
+	content => 'Hello World!'
 }
 
-# Configure Nginx server block for root / with Hello World! page
-file { '/etc/nginx/sites-available/default':
-  ensure  => file,
-  content => "server {
-                listen 80;
-                server_name _;
-
-                location / {
-                    return 200 'Hello World!';
-                }
-            }",
-  require => Package['nginx'],
-  notify  => Service['nginx'],
+exec {'redirect_me':
+	command => 'sed -i "24i\	rewrite ^/redirect_me https://www.youtube.com/watch?v=QH2-TGUlwu4 permanent;" /etc/nginx/sites-available/default',
+	provider => 'shell'
 }
 
-# Create a symbolic link to enable the default server block
-file { '/etc/nginx/sites-enabled/default':
-  ensure => link,
-  target => '/etc/nginx/sites-available/default',
-  require => File['/etc/nginx/sites-available/default'],
-  notify  => Service['nginx'],
+service {'nginx':
+	ensure => running,
+	require => Package['nginx']
 }
-
-# Configure Nginx server block for /redirect_me with a 301 redirect
-file { '/etc/nginx/sites-available/redirect_me':
-  ensure  => file,
-  content => "server {
-                listen 80;
-                server_name _;
-
-                location /redirect_me {
-                    return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;
-                }
-            }",
-  require => Package['nginx'],
-  notify  => Service['nginx'],
-}
-
-# Create a symbolic link to enable the redirect server block
-file { '/etc/nginx/sites-enabled/redirect_me':
-  ensure => link,
-  target => '/etc/nginx/sites-available/redirect_me',
-  require => File['/etc/nginx/sites-available/redirect_me'],
-  notify  => Service['nginx'],
-}
-
