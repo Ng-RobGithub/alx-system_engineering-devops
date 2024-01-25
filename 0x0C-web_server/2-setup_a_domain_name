@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+# Step 1: Access the tools space and unlock GitHub student pack (manual steps)
+
+# Step 2: Register a free .tech domain
+# (You need to manually go to the provided URL, unlock GitHub student pack, and register the domain)
+
+# Step 3: Configure DNS records
+DOMAIN_NAME="yourdomain.tech"
+WEB_SERVER_IP="your-web-01-ip"
+
+# Assuming you have the necessary permissions to edit the DNS records
+# Replace 'yourdomain.tech' and 'your-web-01-ip' with your actual domain and web server IP
+
+echo "Configuring DNS records for $DOMAIN_NAME..."
+# Using a tool like 'nsupdate' or 'curl' to update DNS records programmatically
+# Example with nsupdate (install it if not available: sudo apt-get install dnsutils)
+nsupdate <<EOF
+server 54.167.152.167
+zone $DOMAIN_NAME
+update add $DOMAIN_NAME. 3600 A $WEB_SERVER_IP
+send
+EOF
+
+# Step 4: Verify DNS configuration using 'dig'
+echo "Verifying DNS configuration for $DOMAIN_NAME..."
+dig $DOMAIN_NAME
+
+# Step 5: Update GitHub profile with the domain
+# (This step needs to be done manually)
+
+# Step 6: Verify Registrar information
+echo "Verifying Registrar information for $DOMAIN_NAME..."
+REGISTRAR_INFO=$(curl -s https://whois.whoisxmlapi.com/whoisserver/WhoisService?domainName=$DOMAIN_NAME)
+echo "$REGISTRAR_INFO" | grep "\"registrarName\": \"Dotserve Inc\""
+
+echo "Domain setup completed for $DOMAIN_NAME."

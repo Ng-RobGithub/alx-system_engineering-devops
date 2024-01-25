@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+# Function to display messages with a specific format
+display_message() {
+  echo -e "\n$1\n"
+}
+
+# Update and install Nginx
+display_message "Updating and installing Nginx."
+sudo apt-get update -y -qq && sudo apt-get install nginx -y
+
+# Start Nginx service
+sudo service nginx start
+
+# Allow Nginx on firewall
+sudo ufw allow 'Nginx HTTP'
+
+# Set ownership and permissions for website files
+sudo chown -R "$USER":"$USER" /var/www/html
+sudo chmod -R 755 /var/www
+
+# Backup default index
+cp /var/www/html/index.nginx-debian.html /var/www/html/index.nginx-debian.html.bckp
+
+# Create a new index with "Hello World!"
+echo -e "Hello World!" | sudo tee /var/www/html/index.nginx-debian.html > /dev/null
+
+# Restart Nginx
+sudo service nginx restart
+
+# Display completion message
+display_message "Completed. ✅ "
