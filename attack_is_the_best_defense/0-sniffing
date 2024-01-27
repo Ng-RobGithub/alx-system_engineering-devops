@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vulnerable Website</title>
+</head>
+<body>
+    <h1>Welcome to our vulnerable website!</h1>
+    <p>This website is intentionally vulnerable for educational purposes.</p>
+    <!-- Example of XSS vulnerability -->
+    <script>
+        var userInput = prompt("Enter your name:");
+        document.write("<p>Hello, " + userInput + "!</p>");
+    </script>
+</body>
+</html>
