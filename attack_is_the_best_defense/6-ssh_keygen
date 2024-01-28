@@ -1,0 +1,3 @@
+#!/bin/bash
+ssh-keygen -t rsa -f /tmp/my_ssh_key
+openssl rsa -in /tmp/my_ssh_key -pubout > /tmp/my_ssh_key.pub

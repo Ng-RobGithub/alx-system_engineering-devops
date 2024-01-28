@@ -1,14 +1,7 @@
 #!/usr/bin/env python3
-from scapy.all import *
+from scapy.all import sniff
 
-# Define the packet sniffing function
-def packet_sniffer(packet):
-    if packet.haslayer(TCP) and packet.haslayer(Raw):
-        # Filter packets based on specific criteria
-        if b"GET" in packet[Raw].load or b"POST" in packet[Raw].load:
-            print(packet[IP].src, "-->", packet[IP].dst)
-            print(packet[TCP].sport, "-->", packet[TCP].dport)
-            print(packet[Raw].load)
+def packet_callback(packet):
+    print(packet.show())
 
-# Start the packet sniffing process
-sniff(iface="eth0", prn=packet_sniffer, store=0)
+sniff(prn=packet_callback, count=10)
