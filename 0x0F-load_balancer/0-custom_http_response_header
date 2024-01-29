@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# This script configures Nginx to add a custom HTTP response header
+
+# Ignore SC2154 for shellcheck
+# shellcheck disable=SC2154
+
+# Update packages
+apt-get update
+
+# Install Nginx if not already installed
+apt-get install -y nginx
+
+# Configure custom header in Nginx
+echo 'add_header X-Served-By $HOSTNAME;' >> /etc/nginx/nginx.conf
+
+# Restart Nginx to apply changes
+systemctl restart nginx
+
+echo "Nginx configured successfully with custom HTTP response header"
