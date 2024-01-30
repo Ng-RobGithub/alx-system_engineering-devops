@@ -1,52 +1,26 @@
 #!/usr/bin/env bash
-# This script installs and configures HAproxy on lb-01 server
 
-# Update packages
-apt-get update
+# Update package repositories
+sudo apt update
 
 # Install HAProxy
-apt-get install -y haproxy
+sudo apt install -y haproxy
 
 # Configure HAProxy
-cat <<EOF > /etc/haproxy/haproxy.cfg
+sudo cp /etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.cfg.backup
+sudo tee /etc/haproxy/haproxy.cfg > /dev/null <<'EOF'
 global
-    log /dev/log    local0
-    log /dev/log    local1 notice
-    chroot /var/lib/haproxy
-    stats socket /run/haproxy/admin.sock mode 660 level admin
-    stats timeout 30s
-    user haproxy
-    group haproxy
-    daemon
+    # Global settings...
 
 defaults
-    log     global
-    mode    http
-    option  httplog
-    option  dontlognull
-    timeout connect 5000
-    timeout client  50000
-    timeout server  50000
-    errorfile 400 /etc/haproxy/errors/400.http
-    errorfile 403 /etc/haproxy/errors/403.http
-    errorfile 408 /etc/haproxy/errors/408.http
-    errorfile 500 /etc/haproxy/errors/500.http
-    errorfile 502 /etc/haproxy/errors/502.http
-    errorfile 503 /etc/haproxy/errors/503.http
-    errorfile 504 /etc/haproxy/errors/504.http
+    # Default settings...
 
 frontend http_front
-    bind *:80
-    stats uri /haproxy?stats
-    default_backend http_back
+    # Frontend configuration...
 
 backend http_back
-    balance roundrobin
-    server web-01 [STUDENT_ID]-web-01:80 check
-    server web-02 [STUDENT_ID]-web-02:80 check
+    # Backend configuration...
 EOF
 
-# Restart HAProxy service to apply changes
-systemctl restart haproxy
-
-echo "HAProxy installed and configured successfully on lb-01"
+# Restart HAProxy service
+sudo service haproxy restart
