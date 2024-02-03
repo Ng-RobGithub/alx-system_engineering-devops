@@ -1,33 +1,30 @@
-# 2-puppet_custom_http_response_header.pp
+# Setup New Ubuntu server with nginx
+# # and add a custom HTTP header
 
-# Ensure Nginx package is installed
+exec { 'update system':
+command => '/usr/bin/apt-get update',
+}
+
 package { 'nginx':
-  ensure => installed,
+ensure => 'installed',
+require => Exec['update system']
 }
 
-# Define Nginx configuration file
-file { '/etc/nginx/sites-available/default':
-  ensure  => present,
-  content => "
-server {
-    listen 80 default_server;
-    listen [::]:80 default_server;
-
-    server_name _;
-
-    # Custom HTTP header response
-    location / {
-        add_header X-Served-By $hostname;
-        root /var/www/html;
-        index index.html index.htm;
-    }
-}
-",
-  notify  => Service['nginx'],
+file {'/var/www/html/index.html':
+content => 'Hello World!'
 }
 
-# Ensure Nginx service is running and enabled
-service { 'nginx':
-  ensure  => running,
-  enable  => true,
+exec {'redirect_me':
+command => 'sed -i "24i\	rewrite ^/redirect_me https://th3-gr00t.tk/ permanent;" /etc/nginx/sites-available/default',
+provider => 'shell'
+}
+
+exec {'HTTP header':
+command => 'sed -i "25i\	add_header X-Served-By \$hostname;" /etc/nginx/sites-available/default',
+provider => 'shell'
+}
+
+service {'nginx':
+ensure => running,
+require => Package['nginx']
 }
