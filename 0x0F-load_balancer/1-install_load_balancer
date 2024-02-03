@@ -26,33 +26,34 @@ echo -e "\nSetting up some minor stuff.\n"
 sudo cp /etc/haproxy/haproxy.cfg haproxy_default.backup
 
 server_config=\
-	"defaults
-	mode http
-	timeout client 15s
-	timeout connect 10s
-	timeout server 15s
-	timeout http-request 10s
+"
+defaults
+mode http
+timeout client 15s
+timeout connect 10s
+timeout server 15s
+timeout http-request 10s
 
-	frontend ngrob.tech-frontend
-	bind *:80
-	default_backend ngrob.tech-backend
-	
-	backend ngrob.tech-backend
-	balance roundrobin
-	server 172759-web-01 54.167.152.167 check
-	server 172759-web-02 54.159.2.24 check
-	"
+frontend ngrob.tech-frontend
+bind *:80
+default_backend ngrob.tech-backend
 
-	# shellcheck disable=SC2154
-	echo "$server_config" | sudo dd status=none of=/etc/haproxy/haproxy.cfg
+backend ngrob.tech-backend
+balance roundrobin
+server 172759-web-01 54.167.152.167:80 check
+server 172759-web-02 54.159.2.24:80 check
+"
 
-	# enable haproxy to be started by init script
-	echo "ENABLED=1" | sudo dd status=none of=/etc/default/haproxy
+# shellcheck disable=SC2154
+echo "$server_config" | sudo dd status=none of=/etc/haproxy/haproxy.cfg
 
-	echo "configured - Roundrobin On web-01 & web-02"
+# enable haproxy to be started by init script
+echo "ENABLED=1" | sudo dd status=none of=/etc/default/haproxy
 
-	if [ "$(pgrep -c haproxy)" -le 0 ]; then
-		sudo service haproxy start
-	else
-		sudo service haproxy restart
-	fi
+echo "configured - Roundrobin On web-01 & web-02"
+
+if [ "$(pgrep -c haproxy)" -le 0 ]; then
+	sudo service haproxy start
+else
+	sudo service haproxy restart
+fi
