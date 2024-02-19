@@ -11,8 +11,11 @@ import requests
 import sys
 
 
-if __name__ == "__main__":
-    """ Base URL for the JSONPlaceholder API """
+def main():
+    """
+    Main function to retrieve and display to-do list information
+    Base URL for the JSONPlaceholder API
+    """
     url = "https://jsonplaceholder.typicode.com/"
 
     """ Get the employee information using the provided employee ID """
@@ -32,3 +35,7 @@ if __name__ == "__main__":
 
     """ Print the completed tasks one by one with indentation """
     [print("\t {}".format(complete)) for complete in completed]
+
+
+if __name__ == "__main__":
+    main()
