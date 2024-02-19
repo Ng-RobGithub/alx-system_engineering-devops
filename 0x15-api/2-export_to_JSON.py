@@ -1,52 +1,48 @@
 #!/usr/bin/python3
 """
 Exports to-do list information for a given employee ID to JSON format.
+
+This script takes an employee ID as a command-line argument and exports
+the corresponding user information and to-do list to a JSON file.
 """
 
 import json
 import requests
 import sys
 
-""" Constants """
-BASE_URL = "https://jsonplaceholder.typicode.com/"
-
-
-def get_user_data(user_id):
-    """Retrieve user data from the API."""
-    response = requests.get(BASE_URL + "users/{}".format(user_id))
-    return response.json()
-
-
-def get_user_todos(user_id):
-    """Retrieve user's to-do list from the API."""
-    response = requests.get(BASE_URL + "todos", params={"userId": user_id})
-    return response.json()
-
-
-def export_to_json(user_id, user_data, todos):
-    """Export user's to-do list to a JSON file."""
-    data = {user_id: [{"task": todo["title"], "completed": todo["completed"],
-            "username": user_data["username"]} for todo in todos]}
-    filename = str(user_id) + ".json"
-    with open(filename, "w") as jsonfile:
-        json.dump(data, jsonfile, indent=4)
-
 
 def main():
-    """Main function to export to-do list information."""
-    if len(sys.argv) != 2:
-        print("Usage: {} <user_id>".format(sys.argv[0]))
-        sys.exit(1)
+    """ Get the employee ID from the command-line argument """
+    user_id = sys.argv[1]
 
-        user_id = sys.argv[1]
-        user_data = get_user_data(user_id)
-        if "username" not in user_data:
-            print("User with ID {} not found.".format(user_id))
-            sys.exit(1)
+    """ Base URL for the JSONPlaceholder API """
+    url = "https://jsonplaceholder.typicode.com/"
 
-            todos = get_user_todos(user_id)
-            export_to_json(user_id, user_data, todos)
-            print("To-do list exported to {}.json".format(user_id))
+    """ Fetch user information using the provided employee ID """
+    user = requests.get(url + "users/{}".format(user_id)).json()
+    username = user.get("username")
+
+    """
+    Fetch the to-do list for the employee using the provided employee ID
+    """
+    params = {"userId": user_id}
+    todos = requests.get(url + "todos", params).json()
+
+    """ Create a dictionary containing the user and to-do list information """
+    data_to_export = {
+            user_id: [
+                {
+                    "task": t.get("title"),
+                    "completed": t.get("completed"),
+                    "username": username
+                    }
+                for t in todos
+                ]
+            }
+
+    """ Write the data to a JSON file with the employee ID as the filename """
+    with open("{}.json".format(user_id), "w") as jsonfile:
+        json.dump(data_to_export, jsonfile, indent=4)
 
 
 if __name__ == "__main__":
