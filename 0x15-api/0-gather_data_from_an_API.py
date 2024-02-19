@@ -11,7 +11,7 @@ import requests
 import sys
 
 
-def main():
+if __name__ == "__main__":
     """
     Main function to retrieve and display to-do list information.
     """
@@ -37,7 +37,3 @@ def main():
     """Print the completed tasks one by one with indentation """
     for task in completed_tasks:
         print("\t{}".format(task))
-
-
-if __name__ == "__main__":
-    main()
